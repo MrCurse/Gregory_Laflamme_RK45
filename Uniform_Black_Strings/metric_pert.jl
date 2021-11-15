@@ -12,8 +12,7 @@ function V(r, D, rp=2.0)
 end
 
 function P(r, μ, Ω, D, rp=2.0)
-    num = @. μ*μ*((D-2)-2*(rp/r)^(D-3)+(4-D)*(rp/r)^(2*D-6))/(r*V(r,D))+Ω*Ω*((D-2)
-            + (2*D-7)*(rp/r)^(D-3))/(r*V(r,D))-( 3*(D-3)^2 *(rp/r)^(2*D-6)
+    num = @. μ*μ*((D-2)-2*(rp/r)^(D-3)+(4-D)*(rp/r)^(2*D-6))/(r*V(r,D))+Ω*Ω*((D-2) + (2*D-7)*(rp/r)^(D-3))/(r*V(r,D))-( 3*(D-3)^2 *(rp/r)^(2*D-6)
                 *((D-2)-(rp/r)^(D-3)) )/(4*V(r,D)*r^3)
     denom = @. -Ω^2 - μ^2 *V(r,D) + ((D-3)^2 *(rp/r)^(2*D-6))/(4*r^2)
 
@@ -21,10 +20,8 @@ function P(r, μ, Ω, D, rp=2.0)
 end
 
 function Q(r, μ, Ω, D, rp=2.0)
-    num = @.( (μ^2 +Ω^2 /V(r,D))^2 +(Ω^2 /(4*r*r*V(r,D)^2))*(4*D-8-(8*D-16)
-            *(rp/r)^(D-3) -(53-34*D+5*D^2)*(rp/r)^(2*D-6))+(μ^2 /(4*r*r*V(r,D)))
-                *(4*D-8-4*(3*D-7)*(rp/r)^(D-3)+(D^2 +2*D-11)*(rp/r)^(2*D-6))
-                    +((D-3)^2 /(4*r^4 *V(r,D)^2))*(rp/r)^(2*D-6) *((D-2)*(2*D-5)
+    num = @.( (μ^2 +Ω^2 /V(r,D))^2 +(Ω^2 /(4*r*r*V(r,D)^2))*(4*D-8-(8*D-16)*(rp/r)^(D-3) -(53-34*D+5*D^2)*(rp/r)^(2*D-6))+(μ^2 /(4*r*r*V(r,D)))
+                *(4*D-8-4*(3*D-7)*(rp/r)^(D-3)+(D^2 +2*D-11)*(rp/r)^(2*D-6))+((D-3)^2 /(4*r^4 *V(r,D)^2))*(rp/r)^(2*D-6) *((D-2)*(2*D-5)
                          -(D-1)*(D-2)*(rp/r)^(D-3)+(rp/r)^(2*D-6)) )
     denom = @. -Ω^2 - μ^2 *V(r,D) + ((D-3)^2 *(rp/r)^(2*D-6))/(4*r^2)
 
@@ -67,8 +64,7 @@ function compute_ratio(μ, D)
         We also set a maximum stepsize (dtmax) to prevent the solutions overshooting
         for certain values of μ[i].
         """
-        sol = solve(prob, AutoVern9(RadauIIA5()), reltol=10^-10, abstol=10^-10,
-                        dtmax=10, maxiters=10^7)
+        sol = solve(prob, AutoVern9(RadauIIA5()), reltol=10^-10, abstol=10^-10, dtmax=10, maxiters=10^7)
 
 
         r = sol.t
@@ -76,8 +72,7 @@ function compute_ratio(μ, D)
         Gtr = sol[2,:]
 
         #can be used as an alternative expression for ℛ
-        ℛ[i] = (r2^(D-3) - rp^(D-3))^(2*rp*Ω[i]/(D-3)) *( (Htr[end]*(rp*Ω[i] - D + 3)
-                  - r2^(4-D) *(r2^(D-3) - rp^(D-3))*Gtr[end])/(Htr[end]*(rp*Ω[i] + D - 3)
+        ℛ[i] = (r2^(D-3) - rp^(D-3))^(2*rp*Ω[i]/(D-3)) *( (Htr[end]*(rp*Ω[i] - D + 3) - r2^(4-D) *(r2^(D-3) - rp^(D-3))*Gtr[end])/(Htr[end]*(rp*Ω[i] + D - 3)
                        + r2^(4-D) *(r2^(D-3) - rp^(D-3))*Gtr[end]) )
         #ℛ[i] = ( (Htr[end]*(rp*Ω[i] - 1) - (r2 - rp)*Gtr[end])/(Htr[end]*(rp*Ω[i] + 1)
         #                    + (r2 - rp)*Gtr[end]) )*(r2 - rp)^((2*rp*Ω[i])/(D-3))
