@@ -57,12 +57,15 @@ function compute_ratio(μ, D)
         prob = ODEProblem(metric_pert, u0, tspan, p)
         """
         We use an algorithm switching method between a 9-th order Vern9() and a
-        5-th order RadauIIA5() methods. Initially the solutions is computed using
+        5-th order RadauIIA5() methods. Initially the solutions are computed using
         Vern9(), which is an explicit method. The switch to an implicit RadauIIA5()
         occurs when stiffness is detected in the evaluation.
 
         We also set a maximum stepsize (dtmax) to prevent the solutions overshooting
         for certain values of μ[i].
+    
+        Fair warning: I am sure a more efficient combination of algorithms and tolerances
+        exist, but this is what worked for our case.
         """
         sol = solve(prob, AutoVern9(RadauIIA5()), reltol=10^-10, abstol=10^-10, dtmax=10, maxiters=10^7)
 
@@ -78,7 +81,11 @@ function compute_ratio(μ, D)
         #                    + (r2 - rp)*Gtr[end]) )*(r2 - rp)^((2*rp*Ω[i])/(D-3))
 
     end
-
+    
+    """
+    We find the value of Omega for which the ratio changes sign, signalling the presence 
+    of an instability.
+    """
     u_index = findall(ℛ.>0)[1]
     Ω_u = Ω[u_index]
 
