@@ -57,6 +57,11 @@ function compute_ratio(μ, D)
 
             p = [μ, Ω[i], D]
 
+            """
+            These initial conditions are quite different from the ones in Ruth's
+            original paper. Due to the √(μ^2 - Ω^2) term, for a particular domain
+            of (μ,Ω), the ODE becomes complex valued.
+            """
             Htr0 = exp(-r1*μ^2 /sqrt(\mu^2 - Ω^2))
             Gtr0 = -(μ^2 /sqrt(\mu^2 - Ω^2))*Htr0
 
@@ -74,9 +79,18 @@ function compute_ratio(μ, D)
             ℛ[i] = ( Htr[end]*(rp*Ω/(D-4)*sqrt(1-ε)-1) - (r2-rp2)*Gtr[end] )
                     /( Htr[end]*(rp*Ω/(D-4)*sqrt(1-ε)+1) + (r2-rp2)*Gtr[end] )
                         * (r2 - rp)^((2*rp*Ω/(D-4))*sqrt(1-ε))
-            else
-                println("Ω > μ...evaluation is invalid")
+        else
+            """
+            When μ < Ω, the initial conditions become complex valued. Hence, we
+            abort evaluation and replace the values of ℛ with NaN.
+            """
+            ℛ[i] = NaN
 
         end
     end
+
+    u_index = findall(ℛ.>0)[1]
+    Ω_u = Ω[u_index]
+
+    return Ω_u
 end
